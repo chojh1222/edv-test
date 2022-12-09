@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="target/classes" path="src/main/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
+		<attributes>
+			<attribute name="module" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="target/generated-sources/annotations">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="m2e-apt" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="target/generated-test-sources/test-annotations">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+			<attribute name="test" value="true"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="m2e-apt" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="EDV/ezPDFEDV-Common.jar"/>
+	<classpathentry kind="lib" path="EDV/ezPDFEDV-Engine.jar"/>
+	<classpathentry kind="lib" path="EDV/ezPDFEDV-Engine-Interface.jar"/>
+	<classpathentry kind="lib" path="EDV/ezPDFEDV-Transfer-Client.jar"/>
+	<classpathentry kind="lib" path="EDV/ezPDFEDV-Transfer-Common.jar"/>
+	<classpathentry kind="lib" path="EDV/HCMCommon.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/ezPDFEDV-Common.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/ezPDFEDV-Driver-WS.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/ezPDFEDV-Engine-Interface.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/ezPDFEDV-Transfer-Client.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/ezPDFEDV-Transfer-Common.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/ezPDFEDV-Transfer-Server.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/HCMCommon.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/j2ee.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/jaxen-core.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/jaxen-jdom.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/jdom.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/log4j.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/quartz-all-1.5.2.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/resolver.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/saxpath.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/sibws.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/xalan.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/xercesSamples.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="EDV_lib/xmlParserAPIs.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

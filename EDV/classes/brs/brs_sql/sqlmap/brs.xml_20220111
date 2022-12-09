@@ -1,0 +1,739 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+	<!--  
+	*=========================================================
+	*작성자 : 차경호
+	*설     명 : 상단 조건 관련 쿼리
+	*=========================================================
+	-->
+	
+	<parameterMap id="search" class="map" >
+   		<parameter property="age" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="code" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="keyword" javaType="java.lang.String" mode="IN"/>
+	</parameterMap>
+
+	<!-- 리스트 페이지 comments 구하는 쿼리 -->
+	<statement id="GetComments" parameterMap="search" resultClass="brs.bean.bpm_age.Bpm_age_Bean">
+		SELECT comments FROM bpm_age
+		<dynamic prepend="WHERE">
+			<isNotEqual  prepend="AND" property="age" compareValue="">
+				age_cd = #age#
+			</isNotEqual>
+		</dynamic>
+		ORDER BY ORD DESC		
+	</statement>
+	
+	<!-- 대별 selectbox 목록 관련 쿼리 -->
+	<statement id="Bpm_age_List" resultClass="java.util.HashMap">
+		SELECT age_cd,start_dt,end_dt,comments,ord,is_curr FROM bpm_age WHERE is_curr != 'Y' ORDER BY ORD DESC
+	</statement>
+	
+	<!-- 종류별 selectbox 목록 관련 쿼리 -->
+	<statement id="Bill_doc_kind_List" resultClass="java.util.HashMap">
+		SELECT code,doc_kind FROM bill_doc_kind ORDER BY code ASC
+	</statement>	
+	
+	<!-- 의안번호검색 쿼리 : Meta 검색 -->
+	<statement id="searchList_bill_no" parameterMap="search" resultClass="java.util.HashMap">		
+		SELECT a.book_id,a.doc_title,a.bill_kind,b.bill_no,b.book_serial,b.age,b.doc_kind,b.bill_title
+		FROM
+		bill_book a,
+		(
+		    SELECT *
+		    FROM
+		    (
+			    SELECT bill_no,book_serial,age,doc_kind,bill_title,start_page,row_number() over(partition by bill_no,book_serial order by start_page asc) cnt
+			    FROM bill_bookmark
+			    <dynamic prepend="WHERE">						
+					<isNotNull prepend="AND">
+						bill_no IS NOT NULL AND bill_level='2'
+					</isNotNull>
+					<isNotEqual  prepend="AND" property="age" compareValue="">
+						age=#age#
+					</isNotEqual>
+					<isNotEqual prepend="AND" property="code" compareValue="">
+						doc_kind=#code#
+					</isNotEqual>			
+					<isNotEqual prepend="AND" property="keyword" compareValue="">
+						bill_no LIKE '%$keyword$%'
+					</isNotEqual>
+				</dynamic>		    
+		    ) 
+		    WHERE cnt = 1
+		) b
+		WHERE a.book_serial = b.book_serial
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!-- 의안명검색 쿼리 : Meta 검색 -->
+	<statement id="searchList_bill_name" parameterMap="search" resultClass="java.util.HashMap">		
+		SELECT a.book_id,a.doc_title,a.bill_kind,b.bill_no,b.book_serial,b.age,b.doc_kind,substr(b.bill_title,1,instr(b.bill_title,' ',-1)-1) bill_title
+		FROM
+		bill_book a,
+		(
+		    SELECT *
+		    FROM
+		    (
+			    SELECT bill_no,book_serial,age,doc_kind,bill_title,start_page,row_number() over(partition by bill_no,book_serial order by start_page asc) cnt
+			    FROM bill_bookmark
+			    <dynamic prepend="WHERE">						
+					<isNotNull prepend="AND">
+						bill_no IS NOT NULL AND bill_level='2'
+					</isNotNull>			
+					<isNotEqual  prepend="AND" property="age" compareValue="">
+						age=#age#
+					</isNotEqual>
+					<isNotEqual prepend="AND" property="code" compareValue="">
+						doc_kind=#code#
+					</isNotEqual>			
+					<isNotEqual prepend="AND" property="keyword" compareValue="">
+						substr(bill_title,1,instr(bill_title,' ',-1)-1) LIKE '%$keyword$%'
+					</isNotEqual>
+				</dynamic>		    
+		    ) 
+		    WHERE cnt = 1
+		) b
+		WHERE a.book_serial = b.book_serial
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!-- 목록검색 쿼리 : Meta 검색 -->
+	<statement id="searchList" parameterMap="search" resultClass="java.util.HashMap">		
+		SELECT a.book_id,a.doc_title,a.bill_kind,b.bill_no,b.book_serial,b.age,b.doc_kind,b.bill_title
+		FROM
+		bill_book a,
+		(
+		    SELECT *
+		    FROM
+		    (
+			    SELECT bill_no,book_serial,age,doc_kind,bill_title,start_page,row_number() over(partition by bill_no,book_serial order by start_page asc) cnt
+			    FROM bill_bookmark
+			    <dynamic prepend="WHERE">						
+					<isNotNull prepend="AND">
+						bill_no IS NOT NULL
+					</isNotNull>			
+					<isNotEqual  prepend="AND" property="age" compareValue="">
+						age=#age#
+					</isNotEqual>
+					<isNotEqual prepend="AND" property="code" compareValue="">
+						doc_kind=#code#
+					</isNotEqual>			
+					<isNotEqual prepend="AND" property="keyword" compareValue="">
+						bill_title LIKE '%$keyword$%'
+					</isNotEqual>
+				</dynamic>		    
+		    ) 
+		    WHERE cnt = 1
+		) b
+		WHERE a.book_serial = b.book_serial
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!-- 원문검색 쿼리 : DB검색 방식 -->
+	<statement id="hiddenText" parameterMap="search" resultClass="java.util.HashMap">
+		SELECT DISTINCT a.doc_title doc_title,a.book_id book_id,a.bill_kind bill_kind,a.age age,c.bill_no bill_no,c.bill_title bill_title,c.doc_kind doc_kind,(select ord from bpm_age where age_cd = a.age) ord
+		FROM bill_book a,bill_bookmark c
+		<dynamic prepend="WHERE">
+			<isNotNull prepend="AND">
+				a.book_serial = c.book_serial
+			</isNotNull>			
+			<isNotNull prepend="AND">
+				c.bill_no IS NOT NULL
+			</isNotNull>
+			<isNotNull prepend="AND">
+				a.age = c.age
+			</isNotNull>
+			<isNotEqual  prepend="AND" property="age" compareValue="">
+				a.age=#age#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="code" compareValue="">
+				c.doc_kind=#code#
+			</isNotEqual>			
+			<isNotEqual prepend="AND" property="keyword" compareValue="">
+				DBMS_LOB.INSTR(c.hidden_text,'$keyword$') > 0				
+			</isNotEqual>						
+		</dynamic>
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!--  
+	*=========================================================================
+	*작성자 : 차경호
+	*설     명 : 로그인 관련 쿼리 : 테스트용으로 로컬에서만 적용, 실서버에서는 e-의안 로그인모듈 적용
+	*=========================================================================
+	-->
+
+	<!-- 로그인 처리  -->
+	<statement id="loginCheck" resultClass="java.util.HashMap">
+		SELECT * FROM tb_user
+		<dynamic prepend="WHERE">
+			<isNotEqual  prepend="AND" property="user_id" compareValue="">
+	     	(user_id = #user_id#)
+	    	</isNotEqual>
+	    	<isNotEqual  prepend="AND" property="u_password" compareValue="">
+	     	(u_password = #u_password#)
+	    	</isNotEqual>
+		</dynamic>
+	</statement>
+
+	<!--  
+	*=========================================================
+	*작성자 : 차경호
+	*설     명 : 트리 관련 쿼리
+	*=========================================================
+	-->
+
+	<!-- 대별 검색 트리 -->
+	<statement id="tree_age" resultClass="java.util.HashMap">
+		SELECT code,doc_kind FROM bill_doc_kind ORDER BY code ASC
+	</statement>
+	
+	<!-- 종류별 검색 트리 -->
+	<statement id="tree_doc_kind" resultClass="java.util.HashMap">
+		SELECT age_cd,comments FROM bpm_age ORDER BY ord DESC
+	</statement>
+
+	<!--  
+	*=========================================================
+	*작성자 : 차경호
+	*설     명 : 철목록 관련 쿼리
+	*=========================================================
+	-->
+	
+	<parameterMap id="Bill_book" class="map" >
+   		<parameter property="doc_kind" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="age" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="orderBy" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="orderBy_state" javaType="java.lang.String" mode="IN"/>
+	</parameterMap>
+	
+	<!-- 철목록 -->
+	<statement id="Bill_book_List" parameterMap="Bill_book" resultClass="java.util.HashMap">
+		SELECT doc_title,book_id,book_seq,age,bill_kind,doc_year,total_pages,sub_title,doc_kind,book_folder,(select ord from bpm_age where age_cd = age) ord
+		FROM bill_book
+		<dynamic prepend="WHERE">
+			<isNotEqual prepend="AND" property="doc_kind" compareValue="">
+				doc_kind=#doc_kind#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="age" compareValue="">
+				age=#age#
+			</isNotEqual>							
+		</dynamic>
+		ORDER BY doc_kind ASC		
+		<isNotEmpty prepend=" " property="orderBy">
+		, $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>
+	</statement>	
+	
+	<!--  
+	*=========================================================
+	*작성자 : 차경호
+	*설     명 : 건목록 관련 쿼리
+	*=========================================================
+	-->
+	
+	<parameterMap id="Bpm_bill" class="map" >
+		<parameter property="book_id" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="doc_kind" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="age" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="bill_kind_cd" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="bill_kind_cd2" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="bill_kind_cd3" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="book_serial" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="keyword" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="orderBy" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="orderBy_state" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="bill_no" javaType="java.lang.String" mode="IN"/>
+	</parameterMap>
+	
+	<!-- 건목록을 가져오는데 필요한 book_serial 값 가져오기 --> 
+	<statement id="Bpm_bill_getBook_Serial" parameterMap="Bpm_bill" resultClass="brs.bean.bill_book.Bill_book_Bean">
+		SELECT book_serial FROM bill_book
+		<dynamic prepend="WHERE">
+			<isNotEqual prepend="AND" property="book_id" compareValue="">
+				book_id=#book_id#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="doc_kind" compareValue="">
+				doc_kind=#doc_kind#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="age" compareValue="">
+				age=#age#
+			</isNotEqual>
+		</dynamic>
+	</statement>
+	
+	<!-- 건목록(의안,청원,국정감사,국무위원출석요구,기타,징계안) -->
+	<statement id="Bpm_bill_List" parameterMap="Bpm_bill" resultClass="java.util.HashMap">
+		SELECT bill_no,bill_name,bill_kind_cd,propose_dt,curr_committee,committee_dt,proc_result_cd, bill_memo,proposer,bill_id,approver,age FROM bpm_bill
+		WHERE
+			bill_id IS NOT NULL
+			
+			<isNotEqual property="bill_kind_cd" compareValue="">	 
+			AND
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd2" compareValue="">	 
+			(
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd" compareValue="">
+				bill_kind_cd=#bill_kind_cd#
+			</isNotEqual>
+			<isNotEqual prepend="OR" property="bill_kind_cd2" compareValue="">
+				bill_kind_cd=#bill_kind_cd2#
+			</isNotEqual>
+			<isNotEqual prepend="OR" property="bill_kind_cd3" compareValue="">
+				bill_kind_cd=#bill_kind_cd3#
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd2" compareValue="">	 
+			)
+			</isNotEqual>
+			
+			<isNotEqual prepend="AND" property="age" compareValue="">
+				age=#age#
+			</isNotEqual>
+			AND bill_no IN
+			(
+				SELECT DISTINCT bill_no FROM bill_bookmark
+				<dynamic prepend="WHERE">
+				    <isNotEqual prepend="AND" property="doc_kind" compareValue="">
+						doc_kind=#doc_kind#
+					</isNotEqual>
+					<isNotEqual prepend="AND" property="book_serial" compareValue="">
+						book_serial=#book_serial#
+					</isNotEqual>					
+				</dynamic>
+			)
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!-- 건목록(질문과 답변,각종보고,특위보고서(1),(2),의안행정철) -->
+	<statement id="Bpm_bill_List2" parameterMap="Bpm_bill" resultClass="java.util.HashMap">
+		SELECT * FROM
+		(
+			SELECT age,doc_kind,bill_no,REPLACE(bill_title,' 처리상황표','') bill_title,
+			ROW_NUMBER () OVER (PARTITION BY bill_no, book_serial ORDER BY start_page ASC) cnt 
+			FROM bill_bookmark
+			<dynamic prepend="WHERE">
+				<isNotEqual prepend="AND" property="age" compareValue="">
+					age=#age#
+				</isNotEqual>
+				<isNotEqual prepend="AND" property="doc_kind" compareValue="">
+					doc_kind=#doc_kind#
+				</isNotEqual>
+				<isNotEqual prepend="AND" property="bill_level" compareValue="">
+					bill_level='2'
+				</isNotEqual>													 
+				<isNotEqual prepend="AND" property="book_id" compareValue="">
+					book_id=#book_id#
+				</isNotEqual>			
+			</dynamic>
+		)
+		WHERE cnt = 1		
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!-- 건목록(질문과 답변,각종보고,특위보고서(1),(2),의안행정철) : 파일유무체크시 중복건을 제거하기 위한 쿼리-->
+	<statement id="Bpm_bill_List3" parameterMap="Bpm_bill" resultClass="java.util.HashMap">
+		SELECT DISTINCT bill_no FROM bill_bookmark
+		<dynamic prepend="WHERE">
+			<isNotEqual prepend="AND" property="doc_kind" compareValue="">
+				doc_kind=#doc_kind#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="bill_level" compareValue="">
+				bill_level='2'
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="age" compareValue="">
+				age=#age#
+			</isNotEqual>									 
+			<isNotEqual prepend="AND" property="book_id" compareValue="">
+				book_id=#book_id#
+			</isNotEqual>			
+		</dynamic>		
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!-- 의안번호 검색목록(의안,청원,국정감사,국무위원출석요구,기타,징계안) -->
+	<statement id="searchList_bill_no_01" parameterMap="Bpm_bill" resultClass="java.util.HashMap">
+		SELECT
+		age,bill_no,bill_name,bill_id,(SELECT doc_kind FROM bill_doc_kind WHERE code = #doc_kind#) bill_kind, #doc_kind# doc_kind 
+		FROM bpm_bill
+		WHERE bill_id IS NOT NULL AND NVL(bill_gbn_cd,'-') NOT IN ('본회의수정안','재의요구')		
+			<isNotEqual property="bill_kind_cd" compareValue="">	 
+			AND
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd2" compareValue="">	 
+			(
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd" compareValue="">
+				bill_kind_cd=#bill_kind_cd#
+			</isNotEqual>
+			<isNotEqual prepend="OR" property="bill_kind_cd2" compareValue="">
+				bill_kind_cd=#bill_kind_cd2#
+			</isNotEqual>
+			<isNotEqual prepend="OR" property="bill_kind_cd3" compareValue="">
+				bill_kind_cd=#bill_kind_cd3#
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd2" compareValue="">	 
+			)
+			</isNotEqual>			
+			<isNotEqual prepend="AND" property="age" compareValue="">
+				age=#age#
+			</isNotEqual>			
+			<isNotEqual prepend="AND" property="keyword" compareValue="">
+				bill_no LIKE '%$keyword$%'
+			</isNotEqual>	
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!-- 의안번호,의안명 검색목록(질문과 답변,각종보고,특위보고서(1),(2),의안행정철) -->
+	<statement id="searchList_bill_no_02" parameterMap="Bpm_bill" resultClass="java.util.HashMap">
+		SELECT * FROM
+		(
+			SELECT
+			age,doc_kind,book_serial,bill_no,REPLACE(bill_title,' 처리상황표','') as bill_name,
+			(SELECT doc_kind FROM bill_doc_kind WHERE code = #doc_kind#) bill_kind,
+			row_number() over(partition by bill_no,book_serial order by start_page asc) cnt 
+			FROM bill_bookmark
+			<dynamic prepend="WHERE">
+				<isNotEqual prepend="AND" property="doc_kind" compareValue="">
+					doc_kind=#doc_kind#
+				</isNotEqual>
+				<isNotEqual prepend="AND" property="bill_level" compareValue="">
+					bill_level='2'
+				</isNotEqual>
+				<isNotEqual prepend="AND" property="age" compareValue="">
+					age=#age#
+				</isNotEqual>
+				<isNotEqual prepend="AND" property="keyword" compareValue="">
+					bill_no LIKE '%$keyword$%'
+				</isNotEqual>			
+			</dynamic>
+		)
+		WHERE cnt = 1		
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!-- 의안번호 검색관련 bill_book 정보 구하기 -->
+	<statement id="searchList_bill_no_info" parameterMap="Bpm_bill" resultClass="java.util.HashMap">
+		SELECT book_id,doc_title FROM bill_book		
+		<dynamic prepend="WHERE">
+			<isNotEqual prepend="AND" property="book_serial" compareValue="">
+				book_serial = #book_serial#
+			</isNotEqual>
+		</dynamic>
+	</statement>
+	
+	<!-- 검색엔진 원문검색목록(의안,청원,국정감사,국무위원출석요구,기타,징계안) -->
+	<statement id="HiddenText4k2_01" parameterMap="Bpm_bill" resultClass="java.util.HashMap">
+		SELECT age,bill_kind_cd,bill_no,bill_name,bill_id FROM bpm_bill
+		WHERE bill_id IS NOT NULL AND NVL(bill_gbn_cd,'-') NOT IN ('본회의수정안','재의요구')		
+			<isNotEqual property="bill_kind_cd" compareValue="">	 
+			AND
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd2" compareValue="">	 
+			(
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd" compareValue="">
+				bill_kind_cd=#bill_kind_cd#
+			</isNotEqual>
+			<isNotEqual prepend="OR" property="bill_kind_cd2" compareValue="">
+				bill_kind_cd=#bill_kind_cd2#
+			</isNotEqual>
+			<isNotEqual prepend="OR" property="bill_kind_cd3" compareValue="">
+				bill_kind_cd=#bill_kind_cd3#
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd2" compareValue="">	 
+			)
+			</isNotEqual>			
+			<isNotEqual prepend="AND" property="age" compareValue="">
+				age=#age#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="bill_no" compareValue="">
+				bill_no=#bill_no#
+			</isNotEqual>	
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!-- 검색엔진 원문검색목록(질문과 답변,각종보고,특위보고서(1),(2),의안행정철) -->
+	<statement id="HiddenText4k2_02" parameterMap="Bpm_bill" resultClass="java.util.HashMap">
+		SELECT book_serial,REPLACE(bill_title,' 처리상황표','') as bill_name FROM bill_bookmark
+		<dynamic prepend="WHERE">
+			<isNotNull prepend="AND">
+				bill_no IS NOT NULL AND bill_level='2'
+			</isNotNull>
+			<isNotEqual prepend="AND" property="age" compareValue="">
+				age=#age#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="doc_kind" compareValue="">
+				doc_kind=#doc_kind#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="bill_no" compareValue="">
+				bill_no=#bill_no#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="book_serial" compareValue="">
+				book_serial=#book_serial#
+			</isNotEqual>
+		</dynamic>		
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY $orderBy$
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>		
+	</statement>
+	
+	<!-- 검색엔진 원문검색관련 book_serial 구하기 -->
+	<statement id="HiddenText4k2_book_serial" parameterMap="Bpm_bill" resultClass="brs.bean.bill_book.Bill_book_Bean">
+		SELECT DISTINCT book_serial FROM bill_bookmark		
+		<dynamic prepend="WHERE">
+			<isNotEqual prepend="AND" property="age" compareValue="">
+			age = #age#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="doc_kind" compareValue="">
+			doc_kind = #doc_kind#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="bill_no" compareValue="">
+			bill_no = #bill_no#
+			</isNotEqual>					
+		</dynamic>
+	</statement>
+	
+	<!-- 검색엔진 원문검색관련 book_serial 구하기3 -->
+	<statement id="HiddenText4k2_book_serial3" parameterMap="Bpm_bill" resultClass="java.util.HashMap">
+		SELECT DISTINCT book_serial FROM bill_bookmark		
+		<dynamic prepend="WHERE">
+			<isNotEqual prepend="AND" property="age" compareValue="">
+			age = #age#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="doc_kind" compareValue="">
+			doc_kind = #doc_kind#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="bill_no" compareValue="">
+			bill_no = #bill_no#
+			</isNotEqual>					
+		</dynamic>
+	</statement>
+	
+	<!-- 검색엔진 원문검색관련 book_id 구하기 -->
+	<statement id="HiddenText4k2_book_id" parameterMap="Bpm_bill" resultClass="brs.bean.bill_book.Bill_book_Bean">
+		SELECT book_id FROM bill_book		
+		<dynamic prepend="WHERE">
+			<isNotEqual prepend="AND" property="book_serial" compareValue="">
+			book_serial = #book_serial#
+			</isNotEqual>
+		</dynamic>
+	</statement>
+	
+	<!-- 검색엔진 원문검색관련 bill_kind 구하기 -->
+	<statement id="HiddenText4k2_bill_kind" parameterMap="Bpm_bill" resultClass="brs.bean.bill_doc_kind.Bill_doc_kind_Bean">
+		SELECT doc_kind FROM bill_doc_kind
+		<dynamic prepend="WHERE">
+			<isNotEqual prepend="AND" property="doc_kind" compareValue="">
+			code = #doc_kind#
+			</isNotEqual>
+		</dynamic>
+	</statement>
+	
+	<!--  
+	*=========================================================
+	*작성자 : 차경호
+	*설     명 : 문서목록 관련 쿼리
+	*=========================================================
+	-->
+	
+	<parameterMap id="Bill_bookmark" class="map" >
+   		<parameter property="bill_no" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="doc_kind" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="book_id" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="orderBy" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="orderBy_state" javaType="java.lang.String" mode="IN"/>   		
+	</parameterMap>
+	
+	<!-- 문서목록 -->
+	<statement id="Bill_bookmark_List" parameterMap="Bill_bookmark" resultClass="java.util.HashMap">
+		SELECT bill_no,bill_level,pdf_title,send_no,send_dt,send_to,recv_dt,recv_no,recv_from,recv_dno,start_page,book_id,book_serial FROM bill_bookmark
+		<dynamic prepend="WHERE">
+			<isNotNull prepend="AND">
+				bill_no IS NOT NULL
+			</isNotNull>
+			<isNotNull prepend="AND" property="bill_no">
+				bill_no LIKE #bill_no#||'%'
+			</isNotNull>
+			<isNotNull prepend="AND" property="doc_kind">
+				doc_kind=#doc_kind#
+			</isNotNull>
+			<isNotNull prepend="AND" property="book_id">
+				book_id=#book_id#
+			</isNotNull>			
+		</dynamic>		 
+		<isNotEmpty prepend=" " property="orderBy">
+		ORDER BY book_id ASC,$orderBy$		
+		</isNotEmpty>
+		<isNotEmpty prepend=" " property="orderBy_state">
+		$orderBy_state$
+		</isNotEmpty>						
+	</statement>
+	
+	<!--  
+	*=========================================================
+	*작성자 : 차경호
+	*설     명 : PDF 관련 쿼리
+	*=========================================================
+	-->
+	
+	<parameterMap id="Bill_bookmark_filename" class="map" >
+   		<parameter property="bill_no" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="book_id" javaType="java.lang.String" mode="IN"/>
+	</parameterMap>
+	
+	<!-- PDF filename -->
+	<statement id="Bill_bookmark_filename" parameterMap="Bill_bookmark_filename" resultClass="brs.bean.bill_bookmark.Bill_bookmark_Bean">
+		SELECT pdf_file FROM
+		(		
+			SELECT bill_no || '_0' || to_char(rownum - 1) ||'.PDF' pdf_file, book_id FROM
+			(
+				SELECT DISTINCT a.bill_no, a.book_id  FROM bill_bookmark a, bpm_bill b
+				<dynamic prepend="WHERE">
+					<isNotNull prepend="AND">
+					a.bill_no = b.bill_no
+					</isNotNull>
+					<isNotEqual prepend="AND" property="bill_no" compareValue="">
+					a.bill_no = #bill_no#
+					</isNotEqual>
+					ORDER BY a.book_id
+				</dynamic>			
+			)
+		)
+		<dynamic prepend="WHERE">			
+			<isNotEqual prepend="AND" property="book_id" compareValue="">
+			book_id = #book_id#
+			</isNotEqual>			
+		</dynamic>		 
+	</statement>
+	
+	<parameterMap id="Bill_book_folder" class="map" >   		
+   		<parameter property="book_id" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="age" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="bill_kind" javaType="java.lang.String" mode="IN"/>
+	</parameterMap>
+	
+	<!-- PDF folder -->
+	<statement id="Bill_book_folder" parameterMap="Bill_book_folder" resultClass="brs.bean.bill_book.Bill_book_Bean">
+		SELECT max(book_folder) AS book_folder FROM bill_book		
+		<dynamic prepend="WHERE">					
+			<isNotEqual prepend="AND" property="book_id" compareValue="">
+			book_id = #book_id#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="age" compareValue="">
+			age = #age#
+			</isNotEqual>
+			<isNotEqual prepend="AND" property="doc_kind" compareValue="">
+			doc_kind = #doc_kind#
+			</isNotEqual>					
+		</dynamic>
+	</statement>
+	
+	<!--  
+	*==================================================================================
+	*작성자 : 차경호
+	*설     명 : 키워드 검색시 e-의안시스템으로 갈 때 필요한 bill_id,bill_name 구해오는 쿼리
+	*==================================================================================
+	-->
+	
+	<parameterMap id="Bpm_bill_billInfo" class="map" >
+		<parameter property="bill_kind_cd" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="bill_kind_cd2" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="bill_kind_cd3" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="age" javaType="java.lang.String" mode="IN"/>
+   		<parameter property="doc_kind" javaType="java.lang.String" mode="IN"/>
+	</parameterMap>
+	
+	<statement id="Bpm_bill_billInfo" parameterMap="Bpm_bill_billInfo" resultClass="java.util.HashMap">
+		SELECT bill_id,bill_name FROM bpm_bill
+		WHERE bill_id IS NOT NULL AND NVL(bill_gbn_cd,'-') NOT IN ('본회의수정안','재의요구')
+					
+			<isNotEqual property="bill_kind_cd" compareValue="">
+			AND
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd2" compareValue="">	 
+			(
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd" compareValue="">
+				bill_kind_cd = #bill_kind_cd#
+			</isNotEqual>
+			<isNotEqual prepend="OR" property="bill_kind_cd2" compareValue="">
+				bill_kind_cd = #bill_kind_cd2#
+			</isNotEqual>
+			<isNotEqual prepend="OR" property="bill_kind_cd3" compareValue="">
+				bill_kind_cd = #bill_kind_cd3#
+			</isNotEqual>
+			<isNotEqual property="bill_kind_cd2" compareValue="">	 
+			)
+			</isNotEqual>			
+			<isNotEqual prepend="AND" property="age" compareValue="">
+				age = #age#
+			</isNotEqual>			
+			<isNotEqual prepend="AND" property="bill_no" compareValue="">
+				bill_no = #bill_no#				
+			</isNotEqual>		
+				
+	</statement>
+	
+</sqlMap>
+

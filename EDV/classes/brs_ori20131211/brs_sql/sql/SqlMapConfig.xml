@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+	<properties resource = "brs/brs_sql/sqlmap/SqlMapConfig.properties" />
+	
+	<settings
+		cacheModelsEnabled="true"
+		enhancementEnabled="true"
+		lazyLoadingEnabled="true"
+		maxRequests="32"
+		maxSessions="10"
+		maxTransactions="5"
+		useStatementNamespaces="false"
+	/>
+	
+	<transactionManager type="JDBC" >
+		<dataSource type="SIMPLE">
+			<property name="JDBC.Driver" value="${driver}"/>
+			<property name="JDBC.ConnectionURL" value="${url}"/>
+			<property name="JDBC.Username" value="${user}"/>
+			<property name="JDBC.Password" value="${pass}"/> 
+			<property name="Driver.SetBigStringTryClob" value="true"/>
+		</dataSource>
+	</transactionManager>
+	 
+	<sqlMap resource = "brs/brs_sql/sqlmap/brs.xml" />
+
+</sqlMapConfig>

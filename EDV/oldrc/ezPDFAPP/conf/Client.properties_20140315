@@ -1,0 +1,125 @@
+##############################################
+#         ezPDFAPP Client Attributes         #
+#                     by Hee-Chul Moon       #
+#                     since Nov. 18th. 2004. #
+#                     version 1.0            #
+##############################################
+config.version=1.2
+
+approval.AUTH_TIMEOUT=5000
+approval.AUTH_ENCODING=EUC-KR
+#김선생님 요청으로 아이피 243 을 15로 수정 2007-08-08
+#approval.AUTH_URL=http://10.201.101.243/acubecn/assem/jsp/legacy/bill/ACN_BillAuth.jsp
+#approval.AUTH_URL_FOR_ID=http://10.201.101.243/acubecn/assem/jsp/legacy/bill/ACN_BillAuthByID.jsp
+#approval.APPROVAL_URL4DRAFT=http://10.201.101.243/acubecn/legacy/ACN_BPMLegacyDocument.jsp
+#approval.APPROVAL_URL=http://10.201.101.243/acubecn/assem/jsp/legacy/bill/ACN_BillDocument.jsp
+#approval.APPROVAL_DOC_NO=http://10.201.101.243/acubecn/legacy/ACN_GetDocumentNo.jsp
+#approval.GET_IMAGE=http://10.201.101.243/acubecn/assem/jsp/legacy/bill/ACN_GetImage.jsp
+#approval.GET_IMAGE2=http://10.201.101.243/acubecn/assem/jsp/legacy/bill/ACN_GetImage.jsp
+
+approval.AUTH_URL=http://10.201.101.15/acubecn/assem/jsp/legacy/bill/ACN_BillAuth.jsp
+approval.AUTH_URL_FOR_ID=http://10.201.101.15/acubecn/assem/jsp/legacy/bill/ACN_BillAuthByID.jsp
+approval.APPROVAL_URL4DRAFT=http://10.201.101.15/acubecn/legacy/ACN_BPMLegacyDocument.jsp
+approval.APPROVAL_URL=http://10.201.101.15/acubecn/assem/jsp/legacy/bill/ACN_BillDocument.jsp
+approval.APPROVAL_DOC_NO=http://10.201.101.15/acubecn/legacy/ACN_GetDocumentNo.jsp
+approval.GET_IMAGE=http://10.201.101.15/acubecn/assem/jsp/legacy/bill/ACN_GetImage.jsp
+approval.GET_IMAGE2=http://10.201.101.15/acubecn/assem/jsp/legacy/bill/ACN_GetImage.jsp
+
+
+approval.APPROVAL_FTP_URL=/bms_svc/acube/approval_storage/
+approval.use=FALSE
+
+bpm.MAIN_PROCESS_ID=8220709591825011411140310235426252
+
+bill.web.root=/app/home/tmax/jeus/webhome/app_home/nabill/ebill/
+bill.web.upload.path=/app/home/tmax/jeus/webhome/app_home/nabill/ebill/upload/temp/
+bill.ftp.root=/
+bill.ftp.upload.path=/app/home/tmax/jeus/webhome/app_home/nabill/ebill/upload/ftp/temp/
+
+bill.EDV_DOWNLOAD=http://bms.assembly.go.kr:8000/servlet/FileGate
+bill.web.url=http://bms.assembly.go.kr:8000/
+
+#EDV에 저장되지 않는 파일 링크경로
+bill.BMS_FILE_URL_PREFIX=http://likms.assembly.go.kr/bms_svc
+bill.BMS_FILE_ROOT_PREFIX=/bms_svc
+#파일게이트 주소의 앞자리 
+bill.FILE_GATE_URL_PREFIX=/servlet/FileGate
+#비공개 문서에 대해 접근금지 ip, 구분은 /
+bill.BMS_FILE_BLOCK_IPS=192.168.101.8/211.46.93.10/10.201.60.7/10.201.60.13/10.201.60.14
+#접근금지 ip에 대해 접근한 클라이언트 ip(현재 법제처), 구분은 /
+bill.BMS_FILE_PERMISSION_IPS=125.60.44.18
+
+rd.server.url=http://bms.assembly.go.kr:8000/RDServer/
+
+#
+# http://nalaw.assembly.go.kr/
+# -->192.168.101.8
+#
+lawsystem.exe.url=http://bms.assembly.go.kr:8090
+lawsystem.lawEdit.url=http://192.168.101.8/law/jsp/LawEdit
+ilkms.server.url=http://10.201.11.243/
+
+#
+# Java JNDI Naming. 
+# These properties are vendor-specific.
+# The below is for the WebShpere
+#java.naming.factory.initial=jeus.jndi.JEUSContextFactory
+#java.naming.factory.url.pkgs=none
+#java.naming.provider.url=127.0.0.1
+
+#jndi.prefix.ejb.remote=corbaname:iiop:1.2@10.201.101.72:2809#nodes/phenixNode01/servers/server1/ejb/
+
+java.naming.factory.initial=
+java.naming.factory.url.pkgs=
+java.naming.provider.url=127.0.0.1
+jndi.prefix.ejb.remote=corbaname:iiop:1.2@10.201.101.72:2809#nodes/phenixNode01/servers/server1/ejb/
+
+
+#
+# EDV 
+#
+#edv.factory.initial=jeus.jndi.JEUSContextFactory
+#edv.factory.url.pkgs=none
+#edv.prefix.ejb.remote=corbaname:iiop:1.2@10.201.101.72:2809#nodes/phenixNode01/servers/server1/ejb/
+
+edv.factory.initial=
+edv.factory.url.pkgs=
+edv.prefix.ejb.remote=corbaname:iiop:1.2@10.201.101.72:2809#nodes/phenixNode01/servers/server1/ejb/
+
+
+edv.url=127.0.0.1
+edv.id=edv
+edv.pass=edv
+edv.workspace=edv:na
+
+# JDBC DataSource JNDI Names
+datasource.prefix=jndi.datasource
+
+########### NABILL
+### jndi.datasource.na.bill=java:comp/env/jdbc/NALocalDatasource
+jndi.datasource.na=NaBillThinOracleDataSource
+jndi.datasource.na.bill=NaBillThinOracleDataSource
+
+### jndi.datasource.na.bill.tx=java:comp/env/jdbc/NADatasource
+jndi.datasource.na.bill.tx=NaBillXAOracleDataSource
+
+########### COMMITTEE
+### jndi.datasource.portal=java:comp/env/jdbc/ComLocalDatasource
+jndi.datasource.portal=CommitteeThinOracleDataSource
+
+### jndi.datasource.portal.tx=java:comp/env/jdbc/ComDatasource
+jndi.datasource.portal.tx=CommitteeXAOracleDataSource
+
+########### RECORD
+### jndi.datasource.record=java:comp/env/jdbc/RecordLocalDatasource
+jndi.datasource.record=RecordThinOracleDataSource
+
+### jndi.datasource.record.tx=java:comp/env/jdbc/RecordDatasource
+jndi.datasource.record.tx=RecordXAOracleDatasource
+
+########### EZPDFBPM
+### jndi.datasource.ezpdfbpm=java:comp/env/jdbc/XADatasource
+jndi.datasource.ezpdfbpm=WFXAOracleDataSource
+
+#########  EDV
+jndi.datasource.edv.tx=EDVXAOracleDataSource

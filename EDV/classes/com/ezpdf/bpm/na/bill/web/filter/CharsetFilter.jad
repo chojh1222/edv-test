@@ -1,0 +1,41 @@
+// Decompiled by DJ v3.6.6.79 Copyright 2004 Atanas Neshkov  Date: 2006-11-28 ¿ÀÀü 11:52:28
+// Home Page : http://members.fortunecity.com/neshkov/dj.html  - Check often for new version!
+// Decompiler options: packimports(3) 
+// Source File Name:   CharsetFilter.java
+
+package com.ezpdf.bpm.na.bill.web.filter;
+
+import java.io.IOException;
+import javax.servlet.*;
+
+public class CharsetFilter
+    implements Filter
+{
+
+    public CharsetFilter()
+    {
+    }
+
+    public void init(FilterConfig config)
+        throws ServletException
+    {
+        encoding = config.getInitParameter("requestEncoding");
+        if(encoding == null)
+            encoding = "EUC-KR";
+    }
+
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain next)
+        throws IOException, ServletException
+    {
+        if(request.getCharacterEncoding() == null)
+            request.setCharacterEncoding(encoding);
+        response.setCharacterEncoding(encoding);
+        next.doFilter(request, response);
+    }
+
+    public void destroy()
+    {
+    }
+
+    private String encoding;
+}

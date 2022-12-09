@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  Log4j Configuration for NA-BILL Solution                                 -->
+<!--                                                  at Nov. 18th. 2004.  -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" >
+
+	<!-- ================================================= -->
+	<!--  Collection of APPENDERs                          -->
+	<!-- ================================================= -->
+
+	<!-- Basic Screen Outputting -->
+	<appender name="DefaultConsole" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+	
+	<!-- WF Engine - core module -->
+	<appender name="EngineRollingFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/engine.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="5MB"/>
+		<param name="MaxBackupIndex" value="5"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>	
+	
+	<appender name="ClientRollingFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/client.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="5MB"/>
+		<param name="MaxBackupIndex" value="5"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+	
+	<appender name="ClientRequestRollingFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/client.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="1MB"/>
+		<param name="MaxBackupIndex" value="5"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+	
+	<appender name="LoginRollingFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/login.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="5MB"/>
+		<param name="MaxBackupIndex" value="5"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+
+	<appender name="FileGateRollingFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/filegate.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="5MB"/>
+		<param name="MaxBackupIndex" value="5"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+
+	<appender name="CommitteeRequestRollingFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/committee.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="1MB"/>
+		<param name="MaxBackupIndex" value="5"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+	
+	<appender name="ClientRollingFile4sunny" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/sunny.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="1MB"/>
+		<param name="MaxBackupIndex" value="10"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+	
+	<appender name="ClientRollingFile4redpig" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/redpig.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="1MB"/>
+		<param name="MaxBackupIndex" value="10"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+	
+	<appender name="ClientRollingFile4hyosang" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/hyosang.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="1MB"/>
+		<param name="MaxBackupIndex" value="10"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+	
+	<appender name="ClientRollingFile4yourland" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/yourland.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="1MB"/>
+		<param name="MaxBackupIndex" value="10"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+
+	<appender name="ClientRollingFile4kschoi" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/kschoi.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="1MB"/>
+		<param name="MaxBackupIndex" value="10"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+
+	<appender name="ClientRollingFile4login" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${EZPDF_NA_HOME}/log/login.log"/>
+		<param name="Append" value="true"/>
+		<param name="MaxFileSize" value="1MB"/>
+		<param name="MaxBackupIndex" value="10"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%-5p] %m%n"/>
+		</layout>
+	</appender>
+
+
+	<!-- ================================================= -->
+	<!--  Collection of APPENDERs                          -->
+	<!-- ================================================= -->
+
+	<!-- WF Engine - core module -->
+	<logger name="com.ezpdf.bpm.na.engine">
+		<level value="DEBUG"/>
+		<appender-ref ref="EngineRollingFile"/>
+	</logger>	
+	
+	<logger name="com.ezpdf.bpm.na.client">
+		<level value="DEBUG"/>
+		<appender-ref ref="ClientRollingFile"/>
+	</logger>
+	
+	<logger name="com.ezpdf.bpm.na.login">
+		<level value="DEBUG"/>
+		<appender-ref ref="LoginRollingFile"/>
+	</logger>
+
+	<logger name="com.ezpdf.bpm.na.filegate">
+		<level value="DEBUG"/>
+		<appender-ref ref="FileGateRollingFile"/>
+	</logger>
+
+	<logger name="com.ezpdf.bpm.na.committee">
+		<level value="DEBUG"/>
+		<appender-ref ref="CommitteeRequestRollingFile"/>
+	</logger>
+	
+	<logger name="sunny">
+		<level value="DEBUG"/>
+		<appender-ref ref="ClientRollingFile4sunny"/>
+	</logger>
+	
+	<logger name="redpig">
+		<level value="DEBUG"/>
+		<appender-ref ref="ClientRollingFile4redpig"/>
+	</logger>
+	
+	<logger name="hyosang">
+		<level value="DEBUG"/>
+		<appender-ref ref="ClientRollingFile4hyosang"/>
+	</logger>
+	
+	<logger name="yourland">
+		<level value="DEBUG"/>
+		<appender-ref ref="ClientRollingFile4yourland"/>
+	</logger>
+
+	<logger name="kschoi">
+		<level value="DEBUG"/>
+		<appender-ref ref="ClientRollingFile4kschoi"/>
+	</logger>
+
+	<logger name="login">
+		<level value="DEBUG"/>
+		<appender-ref ref="ClientRollingFile4login"/>
+	</logger>
+
+	<!-- ====================================================== -->
+	<!--  Below [root] Logger is always empty or                -->
+	<!--  should be erased.                                     -->
+	<!--  When [root] Logger should be erased ?                 -->
+	<!--    - included in WAS, already using log4j, like JBoss  -->
+	<!-- ====================================================== -->
+	<!--
+	<root>
+    <level value="DEBUG" />
+  </root>
+	-->
+
+</log4j:configuration>
